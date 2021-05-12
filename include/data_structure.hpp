@@ -1,27 +1,76 @@
 #pragma once
 
-// Заголовочный файл с объявлением структуры данных
+#include <iostream>
+#include <list>
+#include <stack>
+using namespace std;
 
-namespace itis {
+// Класс для представления графа
+class Graph {
+  int V;  // Количество вершин
 
-  // Tip 1: объявите здесь необходимые структуры, функции, константы и прочее
+  //  Указатель на массив, содержащий список смежности
+  list<int> *adj;
 
-  // Пример: объявление константы времени компиляции в заголовочном файле
-  inline constexpr auto kStringConstant = "Hello, stranger!";
+  // Функция, используемая topologicalSort
+  void topologicalSortUtil(int v, bool visited[], stack<int> &Stack);
 
-  // Пример: объявление структуры с полями и методами
-  struct MyStructure {
-   public:
-    int size_{0};
-    int capacity_{0};
-    int* data_{nullptr};
+ public:
+  Graph(int V);  // Конструктор
 
-    // Tip 2: На начальном этапе разработки структуры данных можете определения методов задавать в
-    // заголовочном файле, как только работа будет завершена, можно будет оставить здесь только объявления.
+  // Функция для добавления ребра в граф
+  void addEdge(int v, int w);
 
-    int size() const {
-      return size_;
-    }
-  };
+  // Выводит топологическую сортировку графа
+  void topologicalSort();
+  
+};
 
-}  // namespace itis
+Graph::Graph(int V) {
+  this->V = V;
+  adj = new list<int>[V];
+}
+
+void Graph::addEdge(int v, int w) {
+  adj[v].push_back(w);  // Add w to v’s list.
+}
+
+// Рекурсивная функция, используемая topologicalSort
+void Graph::topologicalSortUtil(int v, bool visited[], stack<int> &Stack) {
+  // Помечаем текущий узел как посещенный
+  visited[v] = true;
+
+  // Рекурсивно вызываем функцию для всех смежных вершин
+  list<int>::iterator i;
+  for (i = adj[v].begin(); i != adj[v].end(); ++i)
+    if (!visited[*i])
+      topologicalSortUtil(*i, visited, Stack);
+
+  // Добавляем текущую вершину в стек с результатом
+  Stack.push(v);
+}
+
+// Функция для поиска топологической сортировки.
+// Рекурсивно использует topologicalSortUtil()
+void Graph::topologicalSort() {
+  stack<int> Stack;
+
+  // Помечаем все вершины как непосещенные
+  bool *visited = new bool[V];
+  for (int i = 0; i < V; i++)
+    visited[i] = false;
+
+  // Вызываем рекурсивную вспомогательную функцию
+  // для поиска топологической сортировки для каждой вершины
+  for (int i = 0; i < V; i++)
+    if (visited[i] == false)
+      topologicalSortUtil(i, visited, Stack);
+
+  // Выводим содержимое стека
+  while (Stack.empty() == false) {
+    cout << Stack.top() << " ";
+    Stack.pop();
+  }
+}
+
+// namespace itis
