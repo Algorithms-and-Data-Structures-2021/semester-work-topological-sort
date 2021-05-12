@@ -5,38 +5,45 @@
 #include <stack>
 using namespace std;
 
+#include<iostream>
+#include <list>
+#include <stack>
+using namespace std;
+
 // Класс для представления графа
-class Graph {
-  int V;  // Количество вершин
+class Graph
+{
+  int V;	// Количество вершин
 
   //  Указатель на массив, содержащий список смежности
   list<int> *adj;
 
   // Функция, используемая topologicalSort
   void topologicalSortUtil(int v, bool visited[], stack<int> &Stack);
-
  public:
-  Graph(int V);  // Конструктор
+  Graph(int V);   // Конструктор
 
   // Функция для добавления ребра в граф
   void addEdge(int v, int w);
 
   // Выводит топологическую сортировку графа
   void topologicalSort();
-  
 };
 
-Graph::Graph(int V) {
+Graph::Graph(int V)
+{
   this->V = V;
   adj = new list<int>[V];
 }
 
-void Graph::addEdge(int v, int w) {
-  adj[v].push_back(w);  // Add w to v’s list.
+void Graph::addEdge(int v, int w)
+{
 }
 
 // Рекурсивная функция, используемая topologicalSort
-void Graph::topologicalSortUtil(int v, bool visited[], stack<int> &Stack) {
+void Graph::topologicalSortUtil(int v, bool visited[],
+                                stack<int> &Stack)
+{
   // Помечаем текущий узел как посещенный
   visited[v] = true;
 
@@ -52,7 +59,8 @@ void Graph::topologicalSortUtil(int v, bool visited[], stack<int> &Stack) {
 
 // Функция для поиска топологической сортировки.
 // Рекурсивно использует topologicalSortUtil()
-void Graph::topologicalSort() {
+void Graph::topologicalSort()
+{
   stack<int> Stack;
 
   // Помечаем все вершины как непосещенные
@@ -67,7 +75,8 @@ void Graph::topologicalSort() {
       topologicalSortUtil(i, visited, Stack);
 
   // Выводим содержимое стека
-  while (Stack.empty() == false) {
+  while (Stack.empty() == false)
+  {
     cout << Stack.top() << " ";
     Stack.pop();
   }
